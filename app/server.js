@@ -4,7 +4,6 @@ const queryString = require('query-string');
 
 
 const app = express();
-
 // For this challenge, we're hard coding a list of users, because
 // we haven't learned about databases yet. Normally, you'd store
 // user data in a database, and query the database to find
@@ -64,11 +63,12 @@ const USERS = [
 //  4. if matching user found, add the user object to the request object
 //     (aka, `req.user = matchedUser`)
 function gateKeeper(req, res, next) {
-  // your code should replace the line below
+  const userInfo = queryString.parse(req.get('x-username-and-password'));
+  req.user = USERS.find((user)=>{return user.userName === userInfo.userName})
   next();
 }
 
-// Add the middleware to your app!
+app.use(gateKeeper);
 
 // this endpoint returns a json object representing the user making the request,
 // IF they supply valid user credentials. This endpoint assumes that `gateKeeper` 
